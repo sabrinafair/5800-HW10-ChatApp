@@ -13,10 +13,10 @@ public class MessageMemento {
     }
 
     public String getState() {
-        return messageContent;
+        return this.messageContent;
     }
 
-    public Instant setState() {
-        return timestamp;
+    public Instant getTimestamp() {
+        return this.timestamp;
     }
 }
