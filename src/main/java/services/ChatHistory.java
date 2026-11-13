@@ -22,8 +22,11 @@ public class ChatHistory implements Iterable<Message> {
     }
 
     public Optional<Message> getLastMessage() {
-        return this.messages.stream()
-                .max(Comparator.comparing(Message::getTimestamp));
+        if (messages.isEmpty()) {
+            return Optional.empty();
+        }
+
+        return Optional.of(messages.get(messages.size() - 1));
     }
 
     @Override

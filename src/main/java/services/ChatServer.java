@@ -55,7 +55,10 @@ public class ChatServer {
 
     public void blockUser(User user, User blockUser) {
         List<User> blockedList = this.blockedUsers.getOrDefault(user, new ArrayList<>());
-        if(!blockedList.contains(blockUser)) blockedList.add(blockUser);
+        if(!blockedList.contains(blockUser)) {
+            blockedList.add(blockUser);
+            this.blockedUsers.put(user, blockedList);
+        }
     }
 
     public void unblockUser(User user, User blockUser) {

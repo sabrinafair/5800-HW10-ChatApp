@@ -9,8 +9,8 @@ import java.util.List;
 
 public class Driver {
     public static void main(String[] args) {
-//        Users can send messages to one or more other users through the chat server.
         //Create server
+//        Users can send messages to one or more other users through the chat server.
         ChatServer chat = new ChatServer();
 
         //Create users
@@ -32,31 +32,28 @@ public class Driver {
         userA.sendMessage(List.of(userB), "Can you see this?");
 
         for (Message message : userB.getChatHistory()) {
-            System.out.println(message.getSender() + ": " + message.getContent());
+            System.out.println(message.getSender().getName() + ": " + message.getContent());
         }
 
         for (Message message : userC.getChatHistory()) {
-            System.out.println(message.getSender() + ": " + message.getContent());
+            System.out.println(message.getSender().getName() + ": " + message.getContent());
 
         }
         //Undo last message from userA
+//        Users can undo the last message they sent using the Memento design pattern.
         userA.undoLastMessage();
         userB.unblockUser(userA);
 
         //more example messages
-        userA.sendMessage(List.of(userB), "Heyy guys wanna go to six flags??");
-        userB.sendMessage(List.of(userB), "dudee the rides are so crazyy");
-        userC.sendMessage(List.of(userB), "IM DOWN!! less goo");
-//        Users can undo the last message they sent using the Memento design pattern.
+        userA.sendMessage(List.of(userB, userC), "Heyy guys wanna go to six flags??");
+        userB.sendMessage(List.of(userA, userC), "dudee the rides are so crazyy");
+        userC.sendMessage(List.of(userA, userB), "IM DOWN!! less goo");
 
         //iterate through messages
 //        Users can receive messages from other users and view the chat history for a specific user.
         for (Message message : userA.getChatHistory()) {
-            System.out.println(message.getSender() + ": " + message.getContent());
+            System.out.println(message.getSender().getName() + ": " + message.getContent());
         }
-
-
-
 
     }
 }
