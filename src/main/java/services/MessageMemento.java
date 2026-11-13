@@ -1,19 +1,21 @@
 package services;
 
+import model.Message;
+
 import java.time.Instant;
 
 public class MessageMemento {
 
-    private String messageContent;
+    private Message message;
     private Instant timestamp;
 
-    public MessageMemento(String messageContent, Instant timestamp) {
-        this.messageContent = messageContent;
+    public MessageMemento(Message message, Instant timestamp) {
+        this.message = message;
         this.timestamp = timestamp;
     }
 
-    public String getState() {
-        return this.messageContent;
+    public Message getState() {
+        return this.message;
     }
 
     public Instant getTimestamp() {

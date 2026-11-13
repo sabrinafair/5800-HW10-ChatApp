@@ -3,12 +3,9 @@ package services;
 import model.Message;
 import model.User;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
-public class ChatHistory {
+public class ChatHistory implements Iterable<Message> {
 //    add a new message to the history and get the last message sent
     private List<Message> messages;
 
@@ -27,5 +24,10 @@ public class ChatHistory {
     public Optional<Message> getLastMessage() {
         return this.messages.stream()
                 .max(Comparator.comparing(Message::getTimestamp));
+    }
+
+    @Override
+    public Iterator<Message> iterator() {
+        return messages.iterator();
     }
 }

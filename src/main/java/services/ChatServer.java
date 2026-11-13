@@ -8,41 +8,39 @@ import java.util.*;
 //The mediator class
 //register and unregister users, send messages from one user to one or more other users
 public class ChatServer {
-    private static List<User> registeredUsers = new ArrayList<>();
+    private List<User> registeredUsers = new ArrayList<>();
 //    private User chatOwner;
 
-    private static Map<User, List<User>> blockedUsers  = new HashMap<>();
+    private Map<User, List<User>> blockedUsers  = new HashMap<>();
     private String chatName;
-    private List<Message> conversation;
 
     public ChatServer() {
         this.chatName = this.getAllUserNames();
-        this.conversation = new ArrayList<>();
     }
 
     private String getAllUserNames() {
         String allUserNames = "";
-        for(User user: registeredUsers){
+        for(User user: this.registeredUsers){
             allUserNames += user.getName() + " ";
         }
         return allUserNames;
     }
 
-    public static void registerUser(User user) {
+    public void registerUser(User user) {
 
-        if(!registeredUsers.contains(user)) registeredUsers.add(user);
+        if(!this.registeredUsers.contains(user)) this.registeredUsers.add(user);
     }
 
-    public static void unregisterUser(User user) {
-        registeredUsers.remove(user);
+    public void unregisterUser(User user) {
+        this.registeredUsers.remove(user);
     }
 
     public void sendMessage(User from, Message message) {
         List<User> userBlockedList;
-        if(registeredUsers.contains(from)){
+        if(this.registeredUsers.contains(from)){
             for(User to: message.getRecipients()){
-                userBlockedList = blockedUsers.getOrDefault(to, Collections.emptyList()); //check receiver list if from is blocked
-                if(!userBlockedList.contains(from) && registeredUsers.contains(to)) {
+                userBlockedList = this.blockedUsers.getOrDefault(to, new ArrayList<>()); //check receiver list if from is blocked
+                if(!userBlockedList.contains(from) && this.registeredUsers.contains(to)) {
                     to.receiveMessage(message);
                 }
             }
@@ -50,48 +48,43 @@ public class ChatServer {
     }
 
     public void removeMessage(Message message) {
-        this.conversation.remove(message);
+        for (User user : this.registeredUsers) {
+            user.getChatHistory().removeMessage(message);
+        }
     }
 
     public void blockUser(User user, User blockUser) {
-        List<User> blockedList = blockedUsers.getOrDefault(user, Collections.emptyList());
+        List<User> blockedList = this.blockedUsers.getOrDefault(user, new ArrayList<>());
         if(!blockedList.contains(blockUser)) blockedList.add(blockUser);
     }
 
     public void unblockUser(User user, User blockUser) {
-        List<User> blockedList = blockedUsers.getOrDefault(user, Collections.emptyList());
-        blockedList.remove(blockUser);
+        List<User> blockedList = this.blockedUsers.get(user);
+        if(blockedList != null) blockedList.remove(blockUser);
     }
 
-    public static List<User> getRegisteredUsers() {
+    public List<User> getRegisteredUsers() {
         return registeredUsers;
     }
 
-    public static Map<User, List<User>> getBlockedUsers() {
-        return blockedUsers;
+    public Map<User, List<User>> getBlockedUsers() {
+        return this.blockedUsers;
     }
 
     public String getChatName() {
         return chatName;
     }
 
-    public List<Message> getConversation() {
-        return conversation;
+    public void setRegisteredUsers(List<User> registeredUsers) {
+        this.registeredUsers = registeredUsers;
     }
 
-    public static void setRegisteredUsers(List<User> registeredUsers) {
-        ChatServer.registeredUsers = registeredUsers;
-    }
-
-    public static void setBlockedUsers(Map<User, List<User>> blockedUsers) {
-        ChatServer.blockedUsers = blockedUsers;
+    public void setBlockedUsers(Map<User, List<User>> blockedUsers) {
+        this.blockedUsers = blockedUsers;
     }
 
     public void setChatName(String chatName) {
         this.chatName = chatName;
     }
 
-    public void setConversation(List<Message> conversation) {
-        this.conversation = conversation;
-    }
 }

@@ -14,7 +14,6 @@ public class User {
     private ChatHistory chatHistory;
     private ChatServer chatServer;
 
-    private Message lastSentMessage;
     private MessageMemento lastMessageMemento;
 
     public User(String name, ChatServer chatServer) {
@@ -47,11 +46,18 @@ public class User {
         this.chatServer = chatServer;
     }
 
+    public void blockUser(User user){
+        chatServer.blockUser(this, user);
+    }
+
+    public void unblockUser(User user){
+        chatServer.unblockUser(this, user);
+    }
+
     public void sendMessage(List<User> to, String content){
         Message message = new Message(this, to, content);
 
-        this.lastMessageMemento = new MessageMemento(message.getContent(), message.getTimestamp());
-        this.lastSentMessage = message;
+        this.lastMessageMemento = new MessageMemento(message, message.getTimestamp());
         this.chatHistory.addMessage(message);
 
         this.chatServer.sendMessage(this, message);
@@ -63,10 +69,8 @@ public class User {
     }
 
     public void undoLastMessage(){
-        if(this.lastSentMessage != null && this.lastMessageMemento != null){
-            this.chatServer.removeMessage(this.lastSentMessage);
-            this.chatHistory.removeMessage(this.lastSentMessage);
-            this.lastSentMessage = null;
+        if(this.lastMessageMemento != null){
+            this.chatServer.removeMessage(this.lastMessageMemento.getState());
             this.lastMessageMemento = null;
         }
     }

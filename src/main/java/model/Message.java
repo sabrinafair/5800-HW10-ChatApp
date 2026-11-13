@@ -25,6 +25,10 @@ public class Message {
         return recipients;
     }
 
+    public User getSender() {
+        return sender;
+    }
+
     public Instant getTimestamp() {
         return timestamp;
     }
